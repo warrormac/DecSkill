@@ -1,0 +1,4 @@
+GeneratorModuleTest 1 0.804561
+FilterModuleTest 1 1.80427
+RecorderModuleTest 1 2.20489
+---
