@@ -36,7 +36,6 @@ TEST(FilterModuleTest, IgnoresNonMatchingSequence) {
     EXPECT_FALSE(found);
 }
 
-// **NEW TEST: Repeated Sequences**
 TEST(FilterModuleTest, DetectsMultipleMatchingSequences) {
     int matchCount = 0;
 

@@ -13,7 +13,7 @@ void RecorderModule::start() {
 }
 
 void RecorderModule::stop() {
-    exitFlag = true;
+    running = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     if (workerThread.joinable()) {
@@ -33,7 +33,7 @@ void RecorderModule::receiveData(const std::vector<uint8_t>& data) {
 }
 
 void RecorderModule::run() {
-    while (!exitFlag) {
+    while (!running) {
         {
             std::lock_guard<std::mutex> lock(bufferMutex);
             if (!buffer.empty()) {

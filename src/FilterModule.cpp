@@ -25,18 +25,18 @@ void FilterModule::stop() {
 }
 
 void FilterModule::receiveData(const std::vector<uint8_t>& data) {
-    std::unique_lock<std::mutex> lock(bufferMutex);
+    if (data.size() < targetSequence.size()) {
+        std::cout << "[ERROR] Data too small, skipping comparison!" << std::endl;
+        return;
+    }
 
-    for (uint8_t byte : data) std::cout << std::hex << (int)byte << " ";
-    std::cout << std::endl;
-
-    size_t matchCount = 0;
     for (size_t i = 0; i <= data.size() - targetSequence.size(); ++i) {
-        if (std::equal(targetSequence.begin(), targetSequence.end(), data.begin() + i, data.begin() + i + targetSequence.size())) {
-            matchCount++;
-
+        if (std::equal(targetSequence.begin(), targetSequence.end(), data.begin() + i)) {
+            std::cout << "[DEBUG] Match found at index: " << i << std::endl;
             if (sendDataCallback) {
-                sendDataCallback(data);  // Forward each time a match is found
+                sendDataCallback(data);
+            } else {
+                std::cout << "[ERROR] sendDataCallback is NULL!" << std::endl;
             }
         }
     }
@@ -66,7 +66,6 @@ void FilterModule::run() {
 bool FilterModule::containsSequence(const std::vector<uint8_t>& data) {
     if (data.size() < targetSequence.size()) return false;
 
-    bool found = false;
     for (size_t i = 0; i <= data.size() - targetSequence.size(); ++i) {
         bool match = true;
         for (size_t j = 0; j < targetSequence.size(); j++) {
@@ -76,11 +75,11 @@ bool FilterModule::containsSequence(const std::vector<uint8_t>& data) {
             }
         }
         if (match) {
-            found = true;
-            // **Do NOT return here, continue checking**
+            return true;
         }
     }
-
-    return found;
+    
+    return false;
 }
+
 

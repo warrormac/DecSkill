@@ -26,8 +26,15 @@ void GeneratorModule::stop() {
 }
 
 void GeneratorModule::run() {
+    std::cout << "[VIEW] Initializing random number generator..." << std::endl;
     std::random_device rd;
+    int seed = rd();
+    std::cout << "[VIEW] True random seed from hardware: " << seed << std::endl;
+
     std::mt19937 gen(rd());
+    std::cout << "[VIEW] Mersenne Twister PRNG initialized with seed: " << rd() << std::endl;
+
+
     std::uniform_int_distribution<int> lengthDist(1, 100);
     std::uniform_int_distribution<int> byteDist(0, 255);
 
